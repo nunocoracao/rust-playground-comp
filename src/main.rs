@@ -7,8 +7,8 @@ mod routes;
 mod services;
 
 // import our routes
-use routes::date::get_current_date;
 use routes::date::date_plus_month;
+use routes::date::get_current_date;
 
 // this is our get route which will be requested at the "/" location wherever it is mounted
 #[get("/")]
@@ -18,9 +18,16 @@ fn say_hello() -> &'static str {
 
 // start the web server and mount our get route at "/api". Can replace /api with anything
 // or just leave it as "/" as the default location
-#[launch]
-fn rocket() -> _ {
-    rocket::build().mount("/api", routes![say_hello, get_current_date, date_plus_month])
+//#[launch]
+//fn rocket() -> _ {
+//    rocket::build().mount("/api", routes![say_hello, get_current_date, date_plus_month])
+//}
+
+#[shuttle_runtime::main]
+async fn rocket() -> shuttle_rocket::ShuttleRocket {
+    let rocket = rocket::build().mount(
+        "/api",
+        routes![say_hello, get_current_date, date_plus_month],
+    );
+    Ok(rocket.into())
 }
-
-
